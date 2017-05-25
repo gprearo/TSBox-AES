@@ -32,6 +32,11 @@ typedef char** t_state ;
 t_state *get_state_arrays(char *file_name, int *num_states) {
 	FILE *input = fopen(file_name, "r") ;
 
+	if (!input) {
+		printf("Invalid file!\n\n") ;
+		exit(1) ;
+	}
+
 	fseek(input, 0L, SEEK_END) ;
 	unsigned long file_size = ftell(input);
 
