@@ -40,6 +40,7 @@ static const char sbox[256] =   {
 	0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
 	0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 };
 
+//Substitui o byte do state pelo equivalente da sbox
 void sub_bytes(t_state s) {
 	int i, j ;
 	for (i = 0; i < Nb; i++) {
@@ -49,6 +50,7 @@ void sub_bytes(t_state s) {
 	}
 }
 
+//Faz shift de um em uma linha do state
 void shift_row(t_state s, int row) {
 	char tmp = s[0][row] ;
 	int i ;
@@ -58,6 +60,11 @@ void shift_row(t_state s, int row) {
 	s[Nb - 1][row] = tmp ;
 }
 
+//Faz a operação ShiftRows do algoritmo
+//Linha 0 - 0 shifts
+//Linha 1 - 1 shift
+//Linha 2 - 2 shifts
+//Linha 3-  3 shifts
 void shift_rows(t_state s) {
 	int i ;
 	for (i  = 0; i < 4; i++) {
@@ -65,6 +72,45 @@ void shift_rows(t_state s) {
 		for (j = 0; j < i; j++) {
 			shift_row(s, i) ;
 		}
+	}
+}
+
+//Aplica a função MixColumn em uma coluna
+void mix_column(char *column) {
+	char old[4] ;
+	char oldx2[4] ;
+	char high_bit ;
+
+	int i ;
+
+	/*
+		Galoi é um latifundiário muito rico e poderoso que não é egoísta.
+		Ele deixa as pessoas usarem seus campos, mas com duas condições:
+			Toda soma dentro de seus campos tem que ser substituída por XOR
+			Quando se multiplica um byte que tem bit mais significativo igual a 1 
+				por 2, deve-se realizar um XOR por 0x1B 
+	*/
+	for (i = 0; i < 4; i++) {
+		old[i] = column[i] ;
+
+		high_bit = (column[i] & 0x80 ? 0xff : 0x00) ;
+
+		oldx2[i] = column[i] << 1 ;
+		oldx2[i] ^= 0x1b &  high_bit ;
+	}
+
+	column[0] = oldx2[0] ^ old[1] ^ oldx2[1] ^ old[2] ^ old[3] ;
+	column[1] = old[0] ^ oldx2[1] ^ oldx2[2] ^ old[2] ^ old[3] ;
+	column[2] = old[0] ^ old[1] ^ oldx2[2] ^ oldx2[3] ^ old[3] ;
+	column[3] = oldx2[0] ^ old[0] ^ old[1] ^ old[2] ^ oldx2[3] ;
+
+}
+
+//Aplica a função MixColumns em um state
+void mix_columns(t_state s) {
+	int i ;
+	for (i = 0; i < Nb; i++) {
+		mix_column(s[i]) ;
 	}
 }
 
@@ -88,9 +134,10 @@ int main(int argc, char *argv[]) {
 	int num_states ;
 	t_state *states = get_state_arrays(input_str, input_size, &num_states) ;
 
+	
 	int i, j, k ;
 	for (i = 0; i < num_states; i++) {
-		shift_rows(states[0]) ;
+		mix_columns(states[i]) ;
 		for (j = 0; j < 4; j++) {
 			for (k = 0; k < Nb; k++) {
 				printf("%c\t", states[i][k][j]) ;
