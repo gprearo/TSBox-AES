@@ -35,37 +35,37 @@ int main(int argc, char *argv[]) {
 //        int num_states ;
 //        t_state *states = get_state_arrays(input_str, 17, &num_states) ;
 
-        printf("plain-text hex: ");
-        int i, j ;
-        for (i = 0; i < 16; i++) {
-                printf("%02x  ", (unsigned char) input_str[i]) ;
-        }
+//        printf("plain-text hex: ");
+//        int i, j ;
+//        for (i = 0; i < 16; i++) {
+//                printf("%02x  ", (unsigned char) input_str[i]) ;
+//        }
 
-        char **expanded_key = key_expansion(argv[2]) ;
-//        char **expanded_key = key_expansion(key) ;
+//        char **expanded_key = key_expansion(argv[2]) ;
+////        char **expanded_key = key_expansion(key) ;
 
-        for (i = 0; i < num_states; i++) {
-                add_round_key(states[i], expanded_key, 0) ;
+//        for (i = 0; i < num_states; i++) {
+//                add_round_key(states[i], expanded_key, 0) ;
 
-                int k ;
+//                int k ;
 
-                for (j = 1; j < Nr; j++) {
-                        sub_bytes(states[i]) ;
-                        shift_rows(states[i]) ;
-                        mix_columns(states[i]) ;
-                        add_round_key(states[i], expanded_key, j) ;
-                }
+//                for (j = 1; j < Nr; j++) {
+//                        sub_bytes(states[i]) ;
+//                        shift_rows(states[i]) ;
+//                        mix_columns(states[i]) ;
+//                        add_round_key(states[i], expanded_key, j) ;
+//                }
 
-                sub_bytes(states[i]) ;
-                shift_rows(states[i]) ;
-                add_round_key(states[i], expanded_key, Nr) ;
-        }
+//                sub_bytes(states[i]) ;
+//                shift_rows(states[i]) ;
+//                add_round_key(states[i], expanded_key, Nr) ;
+//        }
 
-        printf("\ncypher-text hex: ") ;
-        for (i = 0; i < 16; i++) {
-                printf("%02x  ", (unsigned char) input_str[i]) ;
-        }
-        printf("\ncypher-text string (between quotes): \"%s\"\n",input_str) ;
+//        printf("\ncypher-text hex: ") ;
+//        for (i = 0; i < 16; i++) {
+//                printf("%02x  ", (unsigned char) input_str[i]) ;
+//        }
+//        printf("\ncypher-text string (between quotes): \"%s\"\n",input_str) ;
 
         return 0 ;
 }

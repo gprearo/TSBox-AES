@@ -13,6 +13,7 @@ void shift_row(t_state s, int row) ;
 //Linha 2 - 2 shifts
 //Linha 3-  3 shifts
 void shift_rows(t_state s) ;
+void inv_shift_rows(t_state s) ;
 
 //Aplica a função MixColumn em uma coluna
 void mix_column(char *column) ;
