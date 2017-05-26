@@ -11,3 +11,6 @@ typedef char** t_state ;
 //STATE_SIZE = size of each block in bytes
 #define STATE_SIZE (Nb*4)
 
+//Nr = Número de rounds
+#define Nr (Nb+6) 
+

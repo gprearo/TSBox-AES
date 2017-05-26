@@ -6,4 +6,4 @@ file_handling: file_handling.c
 	gcc -c file_handling.c
 
 teste: all
-	./out in1
+	./out in1 0123456789abcdef 
