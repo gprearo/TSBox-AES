@@ -1,6 +1,9 @@
 
-all: tsbox-aes.c file_handling.o
-	gcc -g tsbox-aes.c file_handling.o -o out 
+all: encrypt.c tsbox_aes.o file_handling.o
+	gcc -g encrypt.c tsbox_aes.o file_handling.o -o encrypt
+
+tsbox_aes: tsbox_aes.c
+	gcc -c tsbox_aes.c
 
 file_handling: file_handling.c
 	gcc -c file_handling.c
