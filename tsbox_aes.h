@@ -4,6 +4,7 @@
 
 //Substitui o byte do state pelo equivalente da sbox
 void sub_bytes(t_state s) ;
+void inv_sub_bytes(t_state s) ;
 
 //Faz shift de um em uma linha do state
 void shift_row(t_state s, int row) ;
@@ -19,6 +20,7 @@ void inv_shift_rows(t_state s) ;
 void mix_column(char *column) ;
 //Aplica a função MixColumns em um state
 void mix_columns(t_state s) ;
+void inv_mix_columns(t_state s) ;
 
 
 void word2hexa(char *w) ;
@@ -38,4 +40,7 @@ void xor_word(char *res, char* a, char *b) ;
 
 //Faz xor do state com a chave do round
 void add_round_key(t_state s, char **w, int round) ;
+void inv_add_round_key(t_state s, char **w, int round) ;
+
+
 #endif // TSBOX_AES_H
