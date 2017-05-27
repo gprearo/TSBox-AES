@@ -14,7 +14,9 @@
 		certo (multiplo do tamanho do state)
 
 */
-char *get_input_string(char *file_name, unsigned long *str_size) ;
+char *get_input_string(char *file_name, unsigned long *input_size, unsigned long *output_size) ;
+
+char *get_input_byte(char *file_name, unsigned long *input_size) ;
 
 /*
 	Função: get_state_arrays
@@ -34,3 +36,6 @@ char *get_input_string(char *file_name, unsigned long *str_size) ;
 */
 t_state *get_state_arrays(char *input_array, int vector_size, int *num_states) ;
 
+void write_output(char *file_name, char *string, int size) ;
+
+void write_output_text(char *file_name, char *string) ;

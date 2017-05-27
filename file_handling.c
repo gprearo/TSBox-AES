@@ -1,6 +1,6 @@
 #include "file_handling.h"
 
-char *get_input_string(char *file_name, unsigned long *str_size) {
+char *get_input_string(char *file_name, unsigned long *input_size, unsigned long *output_size) {
 	FILE *input = fopen(file_name, "r") ;
 
 	if (!input) {
@@ -9,6 +9,7 @@ char *get_input_string(char *file_name, unsigned long *str_size) {
 
 	fseek(input, 0L, SEEK_END) ;
 	unsigned long file_size = ftell(input);
+        *input_size = file_size;
 
 	//O tamanho do nosso vetor tem que ser multiplo do tamanho do "State"
 	unsigned long vector_size = file_size + (STATE_SIZE - (file_size % STATE_SIZE)) ;
@@ -25,14 +26,34 @@ char *get_input_string(char *file_name, unsigned long *str_size) {
 		input_array[i] = 0 ;
 	}
 
-	*str_size = vector_size + 1 ;
+        *output_size = vector_size ;
 	return input_array ;
 }
 
+char *get_input_byte(char *file_name, unsigned long *input_size) {
+        FILE *input = fopen(file_name, "r") ;
+
+        if (!input) {
+                return NULL ;
+        }
+
+        fseek(input, 0L, SEEK_END) ;
+        unsigned long file_size = ftell(input);
+        *input_size = file_size;
+
+        char *input_array = (char *) malloc(sizeof(char)*(file_size)) ;
+
+        fseek(input, 0L, SEEK_SET) ;
+
+        fread(input_array, file_size, sizeof(char), input) ;
+        fclose(input) ;
+
+        return input_array ;
+}
 
 t_state *get_state_arrays(char *input_array, int vector_size, int *num_states) {
 	//Ignora o '\0'
-	vector_size-- ;	
+//	vector_size-- ;
 
 	//Cria uma variavel local com o numero de states e atribui o valor ao paremetro por referência
 	int n_states = *num_states = vector_size / STATE_SIZE ;
@@ -48,11 +69,32 @@ t_state *get_state_arrays(char *input_array, int vector_size, int *num_states) {
 		int j ;
 		for (j = 0; j < Nb; j++) {
 			//Endereço inicial da coluna j do state i no vetor de entrada
-			states[i][j] = input_array + i*STATE_SIZE + j*4 ;
-		}
+                        states[i][j] = input_array + i*STATE_SIZE + j*4 ;
+                }
 	}
 
 	return states ;
 
+}
+
+void write_output(char *file_name, char *string, int size) {
+    FILE *f = fopen(file_name, "w");
+    if (f == NULL) {
+        printf("Error opening file!\n");
+        return;
+    }
+    fwrite(string, sizeof(char), size, f);
+    fclose(f);
+    return;
+}
+void write_output_text(char *file_name, char *string) {
+    FILE *f = fopen(file_name, "w");
+    if (f == NULL) {
+        printf("Error opening file!\n");
+        return;
+    }
+    fprintf(f, "%s", string);
+    fclose(f);
+    return;
 }
 
