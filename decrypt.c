@@ -51,6 +51,9 @@ int main(int argc, char *argv[]) {
         shift_rows(states[0]);
         inv_shift_rows(states[0]);
 
+        mix_columns(states[0]);
+        inv_mix_columns(states[0]);
+
 
         printf("\ncipher-text hex: ");
 //        int i, j ;

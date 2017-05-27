@@ -174,12 +174,62 @@ void mix_column(char *column) {
 
 }
 
+//Aplica a função MixColumn em uma coluna
+void inv_mix_column(char *column) {
+        char old[4] ;
+        char oldx2[4] ;
+        char oldx4[4] ;
+        char oldx8[4] ;
+        char high_bit ;
+
+        int i ;
+
+        /*
+                Galoi é um latifundiário muito rico e poderoso que não é egoísta.
+                Ele deixa as pessoas usarem seus campos, mas com duas condições:
+                        Toda soma dentro de seus campos tem que ser substituída por XOR
+                        Quando se multiplica um byte que tem bit mais significativo igual a 1
+                                por 2, deve-se realizar um XOR por 0x1B
+        */
+        for (i = 0; i < 4; i++) {
+                old[i] = column[i] ;
+
+                high_bit = (column[i] & 0x80 ? 0xFF : 0x00) ;
+
+                oldx2[i] = column[i] << 1 ;
+                oldx2[i] ^= 0x1B & high_bit ;
+
+                high_bit = (oldx2[i] & 0x80 ? 0xFF : 0x00) ;
+
+                oldx4[i] = oldx2[i] << 1;
+                oldx4[i] ^= 0x1B & high_bit;
+
+                high_bit = (oldx4[i] & 0x80 ? 0xFF : 0x00) ;
+
+                oldx8[i] = oldx4[i] << 1;
+                oldx8[i] ^= 0x1B & high_bit;
+        }
+
+        column[0] = oldx8[0] ^ oldx4[0] ^ oldx2[0] ^ oldx8[1] ^ oldx2[1] ^ old[1] ^ oldx8[2] ^ oldx4[2] ^ old[2] ^ oldx8[3] ^ old[3] ;
+        column[1] = oldx8[0] ^ old[0] ^ oldx8[1] ^ oldx4[1] ^ oldx2[1] ^ oldx8[2] ^ oldx2[2] ^ old[2] ^ oldx8[3] ^ oldx4[3] ^ old[3] ;
+        column[2] = oldx8[0] ^ oldx4[0] ^ old[0] ^ oldx8[1] ^ old[1] ^ oldx8[2] ^ oldx4[2] ^ oldx2[2] ^ oldx8[3] ^ oldx2[3] ^ old[3] ;
+        column[3] = oldx8[0] ^ oldx2[0] ^ old[0] ^ oldx8[1] ^ oldx4[1] ^ old[1] ^ oldx8[2] ^ old[2] ^ oldx8[3] ^ oldx4[3] ^ oldx2[3] ;
+}
+
+
 //Aplica a função MixColumns em um state
 void mix_columns(t_state s) {
 	int i ;
 	for (i = 0; i < Nb; i++) {
 		mix_column(s[i]) ;
 	}
+}
+
+void inv_mix_columns(t_state s) {
+    int i ;
+    for (i = 0; i < Nb; i++) {
+            inv_mix_column(s[i]) ;
+    }
 }
 
 
