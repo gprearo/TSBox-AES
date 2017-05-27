@@ -30,61 +30,44 @@ int main(int argc, char *argv[]) {
 //        t_state *states = get_state_arrays(input_str, input_size, &num_states) ;
 
 
-        char input_str[] = {0x032, 0x043, 0x0f6, 0x0a8, 0x088, 0x05a, 0x030, 0x08d, 0x031, 0x031, 0x098, 0x0a2, 0x0e0, 0x037, 0x007, 0x034, '\0'} ;
+        char input_str[] = {0x00B, 0x012, 0x0F6, 0x053, 0x00E, 0x0C6, 0x04F, 0x08F, 0x06E, 0x016, 0x007, 0x03F, 0x0FD, 0x0E8, 0x072, 0x0BA, '\0'} ;
         char key[] = {0x02b, 0x07e, 0x015, 0x016, 0x028, 0x0ae, 0x0d2, 0x0a6, 0x0ab, 0x0f7, 0x015, 0x088, 0x009, 0x0cf, 0x04f, 0x03c} ;
         int num_states ;
         t_state *states = get_state_arrays(input_str, 17, &num_states) ;
-                printf("plain-text hex: ");
-                int i, j ;
-                for (i = 0; i < 16; i++) {
-                        printf("%02x  ", (unsigned char) input_str[i]) ;
-                }
-
-        char **expanded_key = key_expansion(key) ;
-
-        add_round_key(states[0], expanded_key, 0);
-        inv_add_round_key(states[0], expanded_key, 0);
-
-        sub_bytes(states[0]);
-        inv_sub_bytes(states[0]);
-
-        shift_rows(states[0]);
-        inv_shift_rows(states[0]);
-
-        mix_columns(states[0]);
-        inv_mix_columns(states[0]);
 
 
-        printf("\ncipher-text hex: ");
-//        int i, j ;
+        printf("cipher-text string (between quotes): \"%s\"\n",input_str) ;
+        printf("cipher-text hex: ");
+        int i, j ;
         for (i = 0; i < 16; i++) {
                 printf("%02x  ", (unsigned char) input_str[i]) ;
         }
 
 //        char **expanded_key = key_expansion(argv[2]) ;
+        char **expanded_key = key_expansion(key) ;
 
-//        for (i = 0; i < num_states; i++) {
-//                add_round_key(states[i], expanded_key, 0) ;
+        for (i = 0; i < num_states; i++) {
+                inv_add_round_key(states[i], expanded_key, Nr) ;
 
-//                int k ;
+                int k ;
 
-//                for (j = 1; j < Nr; j++) {
-//                        sub_bytes(states[i]) ;
-//                        shift_rows(states[i]) ;
-//                        mix_columns(states[i]) ;
-//                        add_round_key(states[i], expanded_key, j) ;
-//                }
+                for (j = Nr - 1; j > 0; j--) {
+                        inv_shift_rows(states[i]);
+                        inv_sub_bytes(states[i]) ;
+                        add_round_key(states[i], expanded_key, j) ;
+                        inv_mix_columns(states[i]) ;
+                }
 
-//                sub_bytes(states[i]) ;
-//                shift_rows(states[i]) ;
-//                add_round_key(states[i], expanded_key, Nr) ;
-//        }
+                inv_shift_rows(states[i]) ;
+                inv_sub_bytes(states[i]) ;
+                add_round_key(states[i], expanded_key, 0) ;
+        }
 
-//        printf("\ncypher-text hex: ") ;
-//        for (i = 0; i < 16; i++) {
-//                printf("%02x  ", (unsigned char) input_str[i]) ;
-//        }
-//        printf("\ncypher-text string (between quotes): \"%s\"\n",input_str) ;
+        printf("\nplain-text hex: ") ;
+        for (i = 0; i < 16; i++) {
+                printf("%02x  ", (unsigned char) input_str[i]) ;
+        }
+        printf("\nplain-text string (between quotes): \"%s\"\n",input_str) ;
 
         return 0 ;
 }
