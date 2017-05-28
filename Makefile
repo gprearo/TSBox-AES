@@ -12,4 +12,5 @@ tsbox: tsbox.c
 	gcc -c tsbox.c
 
 teste: all
-	./out in1 0123456789abcdef 
+	./encrypt input_plain.txt guilhermemomesso 
+	./decrypt output_cipher.txt guilhermemomesso

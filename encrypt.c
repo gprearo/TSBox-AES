@@ -24,15 +24,14 @@ int main(int argc, char *argv[]) {
                 return 1 ;
         }
 
-//        if(strlen(argv[2]) != 32) {
-//                printf("Invalid key!!\n") ;
-//                return 2 ;
-//        }
+        if(strlen(argv[2]) != Nk*4) {
+                printf("Invalid key!!\n") ;
+                return 2 ;
+        }
 
         int num_states ;
         t_state *states = get_state_arrays(input_str, output_size, &num_states) ;
 
-//        char **expanded_key = key_expansion(argv[2]) ;
         char **expanded_key = key_expansion(key) ;
 
         int i, j ;
@@ -42,21 +41,18 @@ int main(int argc, char *argv[]) {
 				col_transpose_sbox(key);
                 for (j = 1; j < Nr; j++) {
 						t_sub_bytes(states[i]) ;
-                       // sub_bytes(states[i]) ;
                         shift_rows(states[i]) ;
                         mix_columns(states[i]) ;
                         add_round_key(states[i], expanded_key, j) ;
                 }
 
 				t_sub_bytes(states[i]) ;
-                //sub_bytes(states[i]) ;
                 shift_rows(states[i]) ;
                 add_round_key(states[i], expanded_key, Nr) ;
         }
-
         write_output("output_cipher.txt", input_str, output_size) ;
-        printf("Input size: %d\n", input_size);
-        printf("Output size: %d\n", output_size);
+        printf("Input size: %lu\n", input_size);
+        printf("Output size: %lu\n", output_size);
 
         return 0 ;
 }
