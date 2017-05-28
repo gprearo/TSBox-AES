@@ -43,4 +43,6 @@ void add_round_key(t_state s, char **w, int round) ;
 void inv_add_round_key(t_state s, char **w, int round) ;
 
 
+void t_sub_bytes(t_state s) ;
+void t_inv_sub_bytes(t_state s) ;
 #endif // TSBOX_AES_H

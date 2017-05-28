@@ -3,6 +3,7 @@
 #include <string.h>
 #include "file_handling.h"
 #include "tsbox_aes.h"
+#include "tsbox.h"
 
 int main(int argc, char *argv[]) {
 
@@ -20,8 +21,8 @@ int main(int argc, char *argv[]) {
         unsigned long input_size ;
         output_size = atoi(argv[2]);
         char *input_str = get_input_byte(argv[1], &input_size) ;
-        char key[] = {0x02b, 0x07e, 0x015, 0x016, 0x028, 0x0ae, 0x0d2, 0x0a6, 0x0ab, 0x0f7, 0x015, 0x088, 0x009, 0x0cf, 0x04f, 0x03c} ;
-
+        //char key[] = {0x02b, 0x07e, 0x015, 0x016, 0x028, 0x0ae, 0x0d2, 0x0a6, 0x0ab, 0x0f7, 0x015, 0x088, 0x009, 0x0cf, 0x04f, 0x03c} ;
+		char *key = argv[3] ;
         printf("%s\n", input_str);
 
         if (!input_str){
@@ -44,15 +45,18 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < num_states; i++) {
                 inv_add_round_key(states[i], expanded_key, Nr) ;
 
+				col_transpose_sbox(key) ;
                 for (j = Nr - 1; j > 0; j--) {
                         inv_shift_rows(states[i]);
-                        inv_sub_bytes(states[i]) ;
+						t_inv_sub_bytes(states[i]) ;
+                        //inv_sub_bytes(states[i]) ;
                         add_round_key(states[i], expanded_key, j) ;
                         inv_mix_columns(states[i]) ;
                 }
 
                 inv_shift_rows(states[i]) ;
-                inv_sub_bytes(states[i]) ;
+				t_inv_sub_bytes(states[i]) ;
+                //inv_sub_bytes(states[i]) ;
                 add_round_key(states[i], expanded_key, 0) ;
         }
 

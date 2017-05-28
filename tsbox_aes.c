@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include "file_handling.h"
 #include "state.h"
+#include "tsbox.h"
 
 
 
@@ -77,6 +78,24 @@ static const unsigned char rcon[256] = {
 	0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 
 	0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d
 } ;
+
+void t_sub_bytes(t_state s) {
+	int i, j ;
+	for (i = 0; i < Nb; i++) {
+		for (j  = 0; j < 4; j++) {
+			t_sub_byte(&s[i][j]) ;
+		}
+	}
+}
+
+void t_inv_sub_bytes(t_state s) {
+	int i, j ;
+	for (i = 0; i < Nb; i++) {
+		for (j  = 0; j < 4; j++) {
+			t_inv_sub_byte(&s[i][j]) ;
+		}
+	}
+}
 
 //Substitui o byte do state pelo equivalente da sbox
 void sub_bytes(t_state s) {
